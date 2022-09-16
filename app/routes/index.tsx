@@ -3,14 +3,21 @@ import { useAtom } from "jotai";
 import { checklistItemsAtom, checklistTitleAtom } from "../data/store";
 import { useEffect } from "react";
 import { useLoaderData } from "@remix-run/react";
+import { type ItemModel } from "~/data/DTOs";
 import { Button } from "@chakra-ui/react";
 
+interface PageData {
+  isFirstItem: boolean;
+  checklistItems: ItemModel[];
+}
+
 export async function loader() {
-  return "load data";
+  const pageData: PageData = { isFirstItem: true, checklistItems: [] };
+  return pageData;
 }
 
 function Home() {
-  const data = useLoaderData();
+  const pageData = useLoaderData<PageData>();
   const [checklistItems, setChecklistItems] = useAtom(checklistItemsAtom);
   const [checklistTitle, setChecklistTitle] = useAtom(checklistTitleAtom);
 
@@ -18,17 +25,15 @@ function Home() {
    * in case of back button
    */
   useEffect(() => {
-    setChecklistItems([]);
     setChecklistTitle(null);
   }, []);
-
+  console.log(pageData);
   return (
     <>
-      {data}
       <Layout
-        checklistItems={checklistItems}
+        checklistItems={pageData.checklistItems}
         setChecklistItems={setChecklistItems}
-        isFirstItem={true}
+        isFirstItem={pageData.isFirstItem}
       ></Layout>
     </>
   );

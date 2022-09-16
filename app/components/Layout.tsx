@@ -16,7 +16,7 @@ import { useState, useRef, useEffect, ReactNode } from "react";
 
 interface LayoutProps {
   children?: ReactNode;
-  checklistItems: ItemModel[];
+  checklistItems?: ItemModel[];
   setChecklistItems: (update: SetStateAction<ItemModel[]>) => void;
   isFirstItem: boolean;
   uid?: string | undefined;
@@ -29,32 +29,11 @@ function Layout({
   isFirstItem,
   uid,
 }: LayoutProps) {
-  function todoListSorter(a: ItemModel, b: ItemModel) {
-    return a.id - b.id;
-  }
-
   return (
     <>
       <Box padding={"2"} marginTop={"4"}>
         <ChecklistTitle uid={uid} isFirstItem={isFirstItem} />
       </Box>
-
-      <Stack direction={"column"} padding={"4"} spacing={"4"}>
-        {isFirstItem
-          ? null
-          : checklistItems &&
-            checklistItems.sort(todoListSorter).map(task => (
-              <>
-                <ChecklistItem
-                  item={task}
-                  checklistItems={checklistItems}
-                  setChecklistItems={setChecklistItems}
-                  isNewChecklist
-                  key={task.id}
-                />
-              </>
-            ))}
-      </Stack>
 
       {children}
 
