@@ -14,43 +14,39 @@ import Layout from "../components/Layout";
 import { Stack } from "@chakra-ui/react";
 import ChecklistItem from "~/components/ChecklistItem";
 import { ItemModel } from "~/data/DTOs";
+import { loadChecklistItems, loadChecklistTitle } from "~/data/loaders";
 
 type Params = {
   uid: string;
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
-  return params.uid;
+interface PageData {
+  uid: string;
+  checklistItems: ItemModel[];
+  checklistTitle: string | null;
+  isFirstItem: boolean;
+}
+
+export const loader: LoaderFunction = async ({ params }): Promise<PageData> => {
+  if (params.uid) {
+    const checklistItems = await loadChecklistItems(params.uid);
+    const checklistTitle = await loadChecklistTitle(params.uid);
+    const pageData: PageData = {
+      uid: params.uid,
+      checklistItems: checklistItems,
+      checklistTitle,
+      isFirstItem: false,
+    };
+    return pageData;
+  } else {
+    throw new Response("no params", { status: 404 });
+  }
 };
 
 function Checklist() {
-  const data = useLoaderData();
-  const { uid } = useParams<Params>();
+  const pageData = useLoaderData<PageData>();
+  console.log(pageData);
   const [checklistItems, setChecklistItems] = useAtom(checklistItemsAtom);
-  const [checklistTitle, setChecklistTitle] = useAtom(checklistTitleAtom);
-  const [listUpdatedCounter] = useAtom(listUpdatedCounterAtom);
-
-  useEffect(() => {
-    async function fetch() {
-      if (uid) {
-        const data = await getChecklistTitleApi(uid);
-        data && setChecklistTitle(data[0].title);
-      }
-    }
-
-    fetch().catch(err => console.error(err));
-  }, []);
-
-  useEffect(() => {
-    async function fetch() {
-      if (uid) {
-        const data = await getChecklistItemsApi(uid);
-        data && setChecklistItems(data);
-      }
-    }
-
-    fetch().catch(err => console.error(err));
-  }, [listUpdatedCounter]);
 
   function todoListSorter(a: ItemModel, b: ItemModel) {
     return a.id - b.id;
@@ -59,24 +55,24 @@ function Checklist() {
   return (
     <>
       <Layout
-        checklistItems={checklistItems}
+        checklistItems={pageData.checklistItems}
         setChecklistItems={setChecklistItems}
-        isFirstItem={false}
-        uid={uid}
+        isFirstItem={pageData.isFirstItem}
+        uid={pageData.uid}
+        checklistTitle={pageData.checklistTitle}
       >
         <Stack direction={"column"} padding={"4"} spacing={"4"}>
-          {checklistItems &&
-            checklistItems.sort(todoListSorter).map(task => (
-              <>
-                <ChecklistItem
-                  item={task}
-                  checklistItems={checklistItems}
-                  setChecklistItems={setChecklistItems}
-                  isNewChecklist
-                  key={task.id}
-                />
-              </>
-            ))}
+          {pageData.checklistItems.sort(todoListSorter).map(task => (
+            <>
+              <ChecklistItem
+                item={task}
+                checklistItems={pageData.checklistItems}
+                setChecklistItems={setChecklistItems}
+                isNewChecklist
+                key={task.id}
+              />
+            </>
+          ))}
         </Stack>
       </Layout>
     </>

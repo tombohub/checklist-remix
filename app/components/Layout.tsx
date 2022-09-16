@@ -20,19 +20,14 @@ interface LayoutProps {
   setChecklistItems: (update: SetStateAction<ItemModel[]>) => void;
   isFirstItem: boolean;
   uid?: string | undefined;
+  checklistTitle: string | null;
 }
 
-function Layout({
-  children,
-  checklistItems,
-  setChecklistItems,
-  isFirstItem,
-  uid,
-}: LayoutProps) {
+function Layout({ children, isFirstItem, uid, checklistTitle }: LayoutProps) {
   return (
     <>
       <Box padding={"2"} marginTop={"4"}>
-        <ChecklistTitle uid={uid} isFirstItem={isFirstItem} />
+        <ChecklistTitle uid={uid} title={checklistTitle} />
       </Box>
 
       {children}
