@@ -7,7 +7,8 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
+import { theme } from "./ui/chakraTheme";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -23,7 +24,8 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <ChakraProvider>
+        <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+        <ChakraProvider theme={theme}>
           <Outlet />
         </ChakraProvider>
         <ScrollRestoration />
