@@ -1,5 +1,5 @@
 import { AddIcon } from "@chakra-ui/icons";
-import { Button, ButtonProps } from "@chakra-ui/react";
+import { Button, type ButtonProps } from "@chakra-ui/react";
 
 export default function AddFirstItemButton({ ...rest }: ButtonProps) {
   return (

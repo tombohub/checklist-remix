@@ -1,6 +1,10 @@
 import Layout from "../components/Layout";
 import { useAtom } from "jotai";
-import { checklistItemsAtom, checklistTitleAtom } from "../data/store";
+import {
+  checklistItemsAtom,
+  checklistTitleAtom,
+  isFirstItemAtom,
+} from "../data/store";
 import { useEffect } from "react";
 import { useLoaderData } from "@remix-run/react";
 import { type ItemModel } from "~/data/DTOs";
@@ -20,6 +24,7 @@ function Home() {
   const pageData = useLoaderData<PageData>();
   const [checklistItems, setChecklistItems] = useAtom(checklistItemsAtom);
   const [checklistTitle, setChecklistTitle] = useAtom(checklistTitleAtom);
+  const [isFirstItem, setIsFirstItem] = useAtom(isFirstItemAtom);
 
   return (
     <>

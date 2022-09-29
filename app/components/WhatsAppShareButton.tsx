@@ -1,5 +1,5 @@
 import { IconButton } from "@chakra-ui/react";
-import { FaWhatsapp } from "react-icons/fa";
+import { FaWhatsapp, FaAccusoft } from "react-icons/fa";
 import { WhatsappShareButton } from "react-share";
 import IconButtonBase from "./base/IconButtonBase";
 

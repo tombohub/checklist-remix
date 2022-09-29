@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import AddFirstItemButton from "./AddFirstItemButton";
+import { useNavigate } from "@remix-run/react";
 import {
   Button,
   Fade,
@@ -14,7 +15,6 @@ import {
   Stack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import { useAtom } from "jotai";
 import {
   checklistItemsAtom,
@@ -35,7 +35,7 @@ function AddItemModal() {
   );
   const [itemName, setItemName] = useState("");
   const [addItemIsError, setAddItemIsError] = useState(false);
-  const router = useRouter();
+  const navigate = useNavigate();
   console.log(isFirstItem);
 
   /**
@@ -68,7 +68,7 @@ function AddItemModal() {
         checklistTitle,
         itemName
       );
-      router.push(`/${newChecklistUid}`);
+      navigate(`/${newChecklistUid}`);
     } else {
       if (uid) {
         await addItemHandler(itemName, uid);

@@ -5,8 +5,7 @@ import {
   listUpdatedCounterAtom,
   checklistTitleAtom,
 } from "../data/store";
-import { getChecklistItemsApi, getChecklistTitleApi } from "../data/api";
-
+import BottomButtonGroup from "~/components/BottomButtonGroup";
 import { useEffect } from "react";
 import { useLoaderData } from "@remix-run/react";
 import { LoaderFunction, LoaderArgs } from "@remix-run/node";
@@ -54,10 +53,10 @@ function Checklist() {
 
   return (
     <>
-      <Layout isFirstItem={props.isFirstItem} uid={props.uid}>
+      <Layout isFirstItem={pageData.isFirstItem} uid={pageData.uid}>
         <Stack direction={"column"} spacing={"4"} flexGrow={1}>
-          {props.checklistItems &&
-            props.checklistItems.sort(todoListSorter).map(item => (
+          {pageData.checklistItems &&
+            pageData.checklistItems.sort(todoListSorter).map(item => (
               <>
                 <ChecklistItem item={item} key={item.id} />
               </>
