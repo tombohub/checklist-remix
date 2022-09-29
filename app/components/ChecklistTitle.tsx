@@ -6,10 +6,11 @@ import { checklistTitleAtom } from "../data/store";
 
 interface ChecklistTitleProps {
   uid: string | undefined;
-  title: string | null;
+  isFirstItem: boolean;
 }
 
-function ChecklistTitle({ uid, title }: ChecklistTitleProps) {
+function ChecklistTitle({ uid }: ChecklistTitleProps) {
+  const [title, setTitle] = useAtom(checklistTitleAtom);
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function handleOnBlur() {
@@ -35,6 +36,7 @@ function ChecklistTitle({ uid, title }: ChecklistTitleProps) {
           placeholder="Title..."
           variant={"flushed"}
           fontSize={"3xl"}
+          onChange={e => setTitle(e.target.value)}
           value={title ? title : ""}
           ref={inputRef}
           onBlur={handleOnBlur}

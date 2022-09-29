@@ -7,8 +7,6 @@ import {
   deleteItemApi,
   updateItemApi,
 } from "./api";
-import { useNavigate } from "react-router-dom";
-import { checklistTitleAtom } from "./store";
 
 export async function addFirstItemHandler(
   checklistTitle: string | null,
@@ -36,5 +34,6 @@ export async function deleteItemHandler(itemId: number) {
 }
 
 export async function checkItemHandler(itemId: number, isChecked: boolean) {
-  await updateItemApi(itemId, isChecked);
+  const updatedItem = await updateItemApi(itemId, isChecked);
+  return updatedItem;
 }

@@ -6,7 +6,6 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  IconButton,
   Input,
   Modal,
   ModalBody,
@@ -15,34 +14,28 @@ import {
   Stack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import { useAtom } from "jotai";
 import {
   checklistItemsAtom,
   checklistTitleAtom,
+  checklistUidAtom,
+  isFirstItemAtom,
   listUpdatedCounterAtom,
 } from "../data/store";
-import {
-  addFirstItemHandler,
-  addItemHandler,
-  deleteItemHandler,
-} from "../data/eventHandlers";
-import { AddIcon } from "@chakra-ui/icons";
+import { addFirstItemHandler, addItemHandler } from "../data/eventHandlers";
+import AddItemButton from "./AddItemButton";
 
-interface AddItemModalProps {
-  isFirstItem: boolean;
-  uid?: string;
-}
-
-function AddItemModal({ isFirstItem, uid }: AddItemModalProps) {
-  const [checklistItems, setCheklistItems] = useAtom(checklistItemsAtom);
+function AddItemModal() {
+  const [isFirstItem, setIsFirstItem] = useAtom(isFirstItemAtom);
+  const [uid, setUid] = useAtom(checklistUidAtom);
   const [checklistTitle] = useAtom(checklistTitleAtom);
   const [listUpdatedCounter, setListUpdatedCounter] = useAtom(
     listUpdatedCounterAtom
   );
   const [itemName, setItemName] = useState("");
   const [addItemIsError, setAddItemIsError] = useState(false);
-  const navigate = useNavigate();
+  const router = useRouter();
   console.log(isFirstItem);
 
   /**
@@ -75,7 +68,7 @@ function AddItemModal({ isFirstItem, uid }: AddItemModalProps) {
         checklistTitle,
         itemName
       );
-      navigate(`/${newChecklistUid}`);
+      router.push(`/${newChecklistUid}`);
     } else {
       if (uid) {
         await addItemHandler(itemName, uid);
@@ -99,16 +92,7 @@ function AddItemModal({ isFirstItem, uid }: AddItemModalProps) {
 
       <AddFirstItemButton onClick={onOpen} hidden={!isFirstItem} />
       <Fade in={!isFirstItem}>
-        <IconButton
-          onClick={onOpen}
-          aria-label="add item"
-          icon={<AddIcon />}
-          position={"fixed"}
-          bottom={"4"}
-          right={"4"}
-          size={"lg"}
-          colorScheme="yellow"
-        />
+        <AddItemButton onClick={onOpen} aria-label="add new item" />
       </Fade>
 
       <Modal isOpen={isOpen} onClose={handleModalClose}>
@@ -124,7 +108,7 @@ function AddItemModal({ isFirstItem, uid }: AddItemModalProps) {
                   autoComplete={"off"}
                 />
                 <FormErrorMessage>
-                  Can't read your mind. Please name an item
+                  {"Can't read your mind. Please name an item"}
                 </FormErrorMessage>
               </FormControl>
             </ModalBody>

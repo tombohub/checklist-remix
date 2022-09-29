@@ -15,7 +15,7 @@ import {
   Fade,
 } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { updateItemApi, changeItemNameApi, deleteItemApi } from "../data/api";
 import { checklistItemsAtom, listUpdatedCounterAtom } from "../data/store";
 import { deleteItemHandler, checkItemHandler } from "../data/eventHandlers";
@@ -24,48 +24,35 @@ import { type ItemModel } from "../data/DTOs";
 
 interface ChecklistItemProps {
   item: ItemModel;
-  checklistItems: ItemModel[];
-  setChecklistItems: (update: SetStateAction<ItemModel[]>) => void;
-  isNewChecklist: boolean;
 }
 
-function ChecklistItem({
-  item,
-  checklistItems,
-  setChecklistItems,
-  isNewChecklist,
-}: ChecklistItemProps) {
+function ChecklistItem({ item }: ChecklistItemProps) {
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isChecked, setIsChecked] = useState(item.is_completed);
   const [listUpdatedCounter, setListUpdatedCounter] = useAtom(
     listUpdatedCounterAtom
   );
 
-  async function handleCheckboxChange(isChecked: boolean, itemId: number) {
+  /**
+   *
+   * @param itemId
+   */
+  async function handleCheckboxChange(newIsChecked: boolean) {
     setIsUpdating(true);
 
-    // use server state update only if it's not new checklist
-    await checkItemHandler(itemId, isChecked);
-    // update on client because checkbox is lagging if waiting for server
-    const newChecklist = checklistItems.map(item => {
-      if (item.id === itemId) {
-        item.is_completed = isChecked;
-        return item;
-      }
-      return item;
-    });
-    setChecklistItems(newChecklist);
+    const updatedItem = await checkItemHandler(item.id, newIsChecked);
 
-    setListUpdatedCounter(listUpdatedCounter + 1);
+    setIsChecked(updatedItem.is_completed);
     setIsUpdating(false);
   }
 
+  /**
+   *
+   * @param itemId
+   */
   async function handleDeleteItem(itemId: number) {
     setIsUpdating(true);
     await deleteItemHandler(itemId);
-
-    // update on client because checkbox is lagging if waiting for server
-    const newChecklist = checklistItems.filter(item => item.id !== itemId);
-    setChecklistItems(newChecklist);
 
     setIsUpdating(false);
     setListUpdatedCounter(listUpdatedCounter + 1);
@@ -83,8 +70,8 @@ function ChecklistItem({
             <>
               <Checkbox
                 key={item.id}
-                isChecked={item.is_completed}
-                onChange={e => handleCheckboxChange(e.target.checked, item.id)}
+                isChecked={isChecked}
+                onChange={e => handleCheckboxChange(e.target.checked)}
               />
             </>
           )}
@@ -97,10 +84,9 @@ function ChecklistItem({
             submitOnBlur={false}
           >
             <EditablePreview
-              textDecorationLine={item.is_completed ? "line-through" : "none"}
+              textDecorationLine={isChecked ? "line-through" : "none"}
               fontSize="xl"
               flexGrow={1}
-              onClick={e => (item.is_completed = !item.is_completed)}
             />
             <Input as={EditableInput} variant="flushed" fontSize={"xl"} />
             <EditableControls />
