@@ -54,27 +54,22 @@ function Checklist() {
 
   return (
     <>
-      <Layout
-        checklistItems={pageData.checklistItems}
-        setChecklistItems={setChecklistItems}
-        isFirstItem={pageData.isFirstItem}
-        uid={pageData.uid}
-        checklistTitle={pageData.checklistTitle}
-      >
-        <Stack direction={"column"} padding={"4"} spacing={"4"}>
-          {pageData.checklistItems.sort(todoListSorter).map(task => (
-            <>
-              <ChecklistItem
-                item={task}
-                checklistItems={pageData.checklistItems}
-                setChecklistItems={setChecklistItems}
-                isNewChecklist
-                key={task.id}
-              />
-            </>
-          ))}
+      <Layout isFirstItem={props.isFirstItem} uid={props.uid}>
+        <Stack direction={"column"} spacing={"4"} flexGrow={1}>
+          {props.checklistItems &&
+            props.checklistItems.sort(todoListSorter).map(item => (
+              <>
+                <ChecklistItem item={item} key={item.id} />
+              </>
+            ))}
         </Stack>
       </Layout>
+      <BottomButtonGroup
+        position={"fixed"}
+        bottom={0}
+        width={"full"}
+        padding={2}
+      />
     </>
   );
 }

@@ -21,20 +21,9 @@ function Home() {
   const [checklistItems, setChecklistItems] = useAtom(checklistItemsAtom);
   const [checklistTitle, setChecklistTitle] = useAtom(checklistTitleAtom);
 
-  /**
-   * in case of back button
-   */
-  useEffect(() => {
-    setChecklistTitle(null);
-  }, []);
-  console.log(pageData);
   return (
     <>
-      <Layout
-        checklistItems={pageData.checklistItems}
-        setChecklistItems={setChecklistItems}
-        isFirstItem={pageData.isFirstItem}
-      ></Layout>
+      <Layout isFirstItem={true}></Layout>
     </>
   );
 }
