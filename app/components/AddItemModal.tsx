@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import AddFirstItemButton from "./AddFirstItemButton";
-import { useNavigate } from "@remix-run/react";
+import { useNavigate, useLoaderData } from "@remix-run/react";
 import {
   Button,
   Fade,
@@ -27,6 +27,7 @@ import { addFirstItemHandler, addItemHandler } from "../data/eventHandlers";
 import AddItemButton from "./AddItemButton";
 
 function AddItemModal() {
+  const data = useLoaderData();
   const [isFirstItem, setIsFirstItem] = useAtom(isFirstItemAtom);
   const [uid, setUid] = useAtom(checklistUidAtom);
   const [checklistTitle] = useAtom(checklistTitleAtom);
@@ -129,6 +130,7 @@ function AddItemModal() {
           </form>
         </ModalContent>
       </Modal>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
     </>
   );
 }
