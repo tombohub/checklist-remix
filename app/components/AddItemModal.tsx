@@ -26,9 +26,12 @@ import {
 import { addFirstItemHandler, addItemHandler } from "../data/eventHandlers";
 import AddItemButton from "./AddItemButton";
 
-function AddItemModal() {
+interface AddItemModalProps {
+  isFirstItem: boolean;
+}
+
+function AddItemModal(props: AddItemModalProps) {
   const data = useLoaderData();
-  const [isFirstItem, setIsFirstItem] = useAtom(isFirstItemAtom);
   const [uid, setUid] = useAtom(checklistUidAtom);
   const [checklistTitle] = useAtom(checklistTitleAtom);
   const [listUpdatedCounter, setListUpdatedCounter] = useAtom(
@@ -37,7 +40,6 @@ function AddItemModal() {
   const [itemName, setItemName] = useState("");
   const [addItemIsError, setAddItemIsError] = useState(false);
   const navigate = useNavigate();
-  console.log(isFirstItem);
 
   /**
    * Used to make submit button spinning while saving new item
@@ -64,7 +66,7 @@ function AddItemModal() {
     setIsAddingItem(true);
 
     // use server state update only if it's not new checklist
-    if (isFirstItem) {
+    if (props.isFirstItem) {
       const newChecklistUid = await addFirstItemHandler(
         checklistTitle,
         itemName
@@ -91,9 +93,13 @@ function AddItemModal() {
     <>
       {/* Floating button */}
 
-      <AddFirstItemButton onClick={onOpen} hidden={!isFirstItem} />
-      <Fade in={!isFirstItem}>
-        <AddItemButton onClick={onOpen} aria-label="add new item" />
+      <AddFirstItemButton onClick={onOpen} hidden={!props.isFirstItem} />
+      <Fade in={!props.isFirstItem}>
+        <AddItemButton
+          onClick={onOpen}
+          aria-label="add new item"
+          hidden={props.isFirstItem}
+        />
       </Fade>
 
       <Modal isOpen={isOpen} onClose={handleModalClose}>

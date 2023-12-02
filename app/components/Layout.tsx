@@ -1,8 +1,7 @@
-import { Stack, Box, Button } from "@chakra-ui/react";
-import { nanoid } from "nanoid";
+import { Box } from "@chakra-ui/react";
 
 import ChecklistTitle from "./ChecklistTitle";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import BottomButtonGroup from "./BottomButtonGroup";
 
 interface LayoutProps {
@@ -20,7 +19,9 @@ function Layout({ children, isFirstItem, uid }: LayoutProps) {
 
       <Box padding={4}>{children}</Box>
 
-      <BottomButtonGroup />
+      <Box position={"fixed"} bottom={0} width={"full"} padding={2}>
+        <BottomButtonGroup isFirstItem={isFirstItem} />
+      </Box>
     </>
   );
 }

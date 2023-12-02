@@ -3,10 +3,14 @@ import AddItemModal from "./AddItemModal";
 import CopyLinkButton from "./CopyLinkButton";
 import WhatsAppShareButton from "./WhatsAppShareButton";
 
-export default function BottomButtonGroup(props: FlexProps) {
+interface BottomButtonGroupProps {
+  isFirstItem: boolean;
+}
+
+export default function BottomButtonGroup(props: BottomButtonGroupProps) {
   return (
     <>
-      <Flex minWidth={"max-content"} {...props}>
+      <Flex minWidth={"max-content"}>
         <Box>
           <ButtonGroup>
             <WhatsAppShareButton />
@@ -14,7 +18,7 @@ export default function BottomButtonGroup(props: FlexProps) {
           </ButtonGroup>
         </Box>
         <Spacer />
-        <AddItemModal />
+        <AddItemModal isFirstItem={props.isFirstItem} />
       </Flex>
     </>
   );
